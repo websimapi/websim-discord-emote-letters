@@ -2,6 +2,7 @@ const emoteList = document.getElementById('emote-list');
 const inputText = document.getElementById('input-text');
 const outputText = document.getElementById('output-text');
 const copyBtn = document.getElementById('copy-btn');
+const advancedBtn = document.getElementById('advanced-btn');
 
 // Define the letters that should be uppercase
 const uppercaseLetters = new Set(['b', 'd', 'e', 'i', 'l', 'm', 's', 'v', 'w']);
@@ -49,6 +50,53 @@ function convertToEmoteFormat(text) {
         .filter(item => item !== '') // Remove empty strings
         .join(' '); // Add space between each emote
 }
+
+// Advanced button with LLM functionality
+advancedBtn.addEventListener('click', async () => {
+    const userInput = inputText.value.trim();
+    
+    if (!userInput) {
+        alert("Please enter some text first!");
+        return;
+    }
+    
+    // Change button state to show processing
+    advancedBtn.textContent = "Processing...";
+    advancedBtn.disabled = true;
+    
+    try {
+        // Call AI to generate a verbose version
+        const completion = await websim.chat.completions.create({
+            messages: [
+                {
+                    role: "system",
+                    content: "You are an AI that takes simple text and creates a detailed, verbose, and eloquent version of it. Expand on the user's ideas with rich vocabulary and detailed descriptions."
+                },
+                {
+                    role: "user",
+                    content: userInput
+                }
+            ]
+        });
+        
+        // Get the verbose response
+        const verboseText = completion.content;
+        
+        // Update the input field with the verbose text
+        inputText.value = verboseText;
+        
+        // Convert to emote format and update output
+        outputText.value = convertToEmoteFormat(verboseText);
+        
+    } catch (error) {
+        console.error("Error calling AI:", error);
+        alert("Sorry, there was an error processing your request. Please try again.");
+    } finally {
+        // Reset button state
+        advancedBtn.textContent = "Create Verbose Version";
+        advancedBtn.disabled = false;
+    }
+});
 
 // Update output when input changes
 inputText.addEventListener('input', () => {

@@ -48,7 +48,7 @@ textarea {
     margin-bottom: 10px;
 }
 
-#copy-btn {
+#copy-btn, #advanced-btn {
     background-color: #5865F2;
     color: white;
     border: none;
@@ -59,8 +59,17 @@ textarea {
     transition: background-color 0.2s;
 }
 
-#copy-btn:hover {
+#copy-btn:hover, #advanced-btn:hover {
     background-color: #4752c4;
+}
+
+#advanced-btn {
+    margin-bottom: 10px;
+    background-color: #57F287;
+}
+
+#advanced-btn:hover {
+    background-color: #45c46f;
 }
 
 #emote-list {
@@ -81,4 +90,3 @@ textarea {
     font-size: 1.1em;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
 }
-
