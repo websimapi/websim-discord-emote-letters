@@ -1,81 +1,70 @@
 const emoteList = document.getElementById('emote-list');
-const textInput = document.getElementById('text-input');
-const outputArea = document.getElementById('output-area');
-const copyButton = document.getElementById('copy-button');
-const copyFeedback = document.getElementById('copy-feedback');
-
-// --- Emote Generation Logic ---
+const inputText = document.getElementById('input-text');
+const outputText = document.getElementById('output-text');
+const copyBtn = document.getElementById('copy-btn');
 
 // Define the letters that should be uppercase
 const uppercaseLetters = new Set(['b', 'd', 'e', 'i', 'l', 'm', 's', 'v', 'w']);
-const emoteMap = new Map();
 
-// Populate the emote map and the display list
+// Create a mapping from regular letters to discord emote format
+const letterToEmote = {};
+
 for (let i = 97; i <= 122; i++) { // ASCII codes for 'a' to 'z'
-    const letterLower = String.fromCharCode(i);
-    const letterForEmote = uppercaseLetters.has(letterLower)
-        ? letterLower.toUpperCase()
-        : letterLower;
+    let letter = String.fromCharCode(i);
+    let emoteLetter = letter; // Default to lowercase
 
-    const emoteText = `:${letterForEmote}_:`;
-    emoteMap.set(letterLower, emoteText); // Map lowercase input to correct emote
+    // Check if the current letter should be uppercase
+    if (uppercaseLetters.has(letter)) {
+        emoteLetter = letter.toUpperCase(); // Convert to uppercase
+    }
 
-    // Add to the display list (optional, kept from previous step)
+    const emoteText = `:${emoteLetter}_:`;
+    
+    // Add to mapping
+    letterToEmote[letter] = emoteText;
+
+    // Create list item
     const listItem = document.createElement('li');
     listItem.textContent = emoteText;
     emoteList.appendChild(listItem);
 }
-// Add space handling (replace space with multiple space characters or a specific emote if desired)
-// For now, we'll just use a regular space in the output.
-emoteMap.set(' ', ' ');
 
+// Convert input text to discord emote format
+function convertToEmoteFormat(text) {
+    // Convert to lowercase and remove non-alphabetic characters
+    return text.toLowerCase()
+        .split('')
+        .map(char => {
+            // If it's a letter a-z, convert to emote format
+            if (/[a-z]/.test(char)) {
+                return letterToEmote[char];
+            } 
+            // Keep spaces
+            else if (char === ' ') {
+                return ' ';
+            }
+            // Ignore other characters
+            return '';
+        })
+        .filter(item => item !== '') // Remove empty strings
+        .join(' '); // Add space between each emote
+}
 
-// --- Input Conversion Logic ---
-
-textInput.addEventListener('input', () => {
-    const inputText = textInput.value.toLowerCase(); // Convert input to lowercase for mapping
-    let outputText = '';
-
-    for (const char of inputText) {
-        if (emoteMap.has(char)) {
-            outputText += emoteMap.get(char);
-        } else {
-            // Optionally handle characters not in the map (e.g., punctuation)
-            // outputText += char; // Keep original character
-            // Or ignore them:
-            // continue;
-        }
-    }
-    outputArea.value = outputText;
+// Update output when input changes
+inputText.addEventListener('input', () => {
+    outputText.value = convertToEmoteFormat(inputText.value);
 });
 
-// --- Copy to Clipboard Logic ---
-
-copyButton.addEventListener('click', async () => {
-    if (!outputArea.value) return; // Don't copy if empty
-
-    try {
-        await navigator.clipboard.writeText(outputArea.value);
-        // Provide visual feedback
-        copyFeedback.textContent = 'Copied!';
-        copyFeedback.classList.add('show');
-        copyButton.disabled = true; // Briefly disable button
-
-        setTimeout(() => {
-            copyFeedback.classList.remove('show');
-            copyButton.disabled = false; // Re-enable button
-             // Optional: Clear feedback text after fade out
-             setTimeout(() => { copyFeedback.textContent = ''; }, 500);
-        }, 1500); // Feedback visible for 1.5 seconds
-
-    } catch (err) {
-        console.error('Failed to copy text: ', err);
-        copyFeedback.textContent = 'Failed to copy!';
-        copyFeedback.classList.add('show');
-         setTimeout(() => {
-            copyFeedback.classList.remove('show');
-             // Optional: Clear feedback text after fade out
-             setTimeout(() => { copyFeedback.textContent = ''; }, 500);
-        }, 2000);
-    }
+// Copy to clipboard functionality
+copyBtn.addEventListener('click', () => {
+    outputText.select();
+    document.execCommand('copy');
+    
+    // Visual feedback
+    const originalText = copyBtn.textContent;
+    copyBtn.textContent = 'Copied!';
+    
+    setTimeout(() => {
+        copyBtn.textContent = originalText;
+    }, 1500);
 });

@@ -4,15 +4,63 @@ body {
     background-color: #f0f0f0;
 }
 
-h1 {
+h1, h2 {
     text-align: center;
     color: #333;
 }
 
-h2 {
-    text-align: center;
-    color: #555;
-    margin-top: 30px;
+.converter-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto 30px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+@media (min-width: 768px) {
+    .converter-container {
+        flex-direction: row;
+    }
+}
+
+.input-section, .output-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+textarea {
+    height: 120px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: monospace;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+
+#copy-btn {
+    background-color: #5865F2;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+#copy-btn:hover {
+    background-color: #4752c4;
 }
 
 #emote-list {
@@ -34,67 +82,3 @@ h2 {
     box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
 }
 
-#converter {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-    max-width: 600px;
-    margin: 20px auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-#converter label {
-    font-weight: bold;
-    color: #444;
-}
-
-#text-input, #output-area {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; 
-    font-size: 1em;
-}
-
-#output-area {
-    height: 100px;
-    font-family: monospace;
-    background-color: #f9f9f9;
-    resize: vertical;
-}
-
-#copy-button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.2s ease;
-    align-self: flex-start; 
-}
-
-#copy-button:hover {
-    background-color: #0056b3;
-}
-
-#copy-button:active {
-    background-color: #004085;
-}
-
-.copy-feedback {
-    margin-left: 10px;
-    color: green;
-    font-size: 0.9em;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-.copy-feedback.show {
-    opacity: 1;
-}

@@ -5,19 +5,21 @@
 </head>
 <body>
     <h1>Discord Emote Letters</h1>
-
-    <div id="converter">
-        <label for="text-input">Enter text:</label>
-        <input type="text" id="text-input" placeholder="Type here...">
-
-        <label for="output-area">Emote output:</label>
-        <textarea id="output-area" readonly placeholder="Emotes will appear here..."></textarea>
-
-        <button id="copy-button">Copy to Clipboard</button>
-        <span id="copy-feedback" class="copy-feedback"></span>
+    
+    <div class="converter-container">
+        <div class="input-section">
+            <label for="input-text">Enter your text:</label>
+            <textarea id="input-text" placeholder="Type here..."></textarea>
+        </div>
+        
+        <div class="output-section">
+            <label for="output-text">Discord emote format:</label>
+            <textarea id="output-text" readonly></textarea>
+            <button id="copy-btn">Copy to Clipboard</button>
+        </div>
     </div>
-
-    <h2>Available Emotes:</h2>
+    
+    <h2>Available Emote Letters</h2>
     <ul id="emote-list">
         <!-- Emotes will be added here by JavaScript -->
     </ul>
