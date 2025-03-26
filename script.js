@@ -65,12 +65,12 @@ advancedBtn.addEventListener('click', async () => {
     advancedBtn.disabled = true;
     
     try {
-        // Call AI to generate a verbose version
+        // Call AI to generate a verbose version with character limit instructions
         const completion = await websim.chat.completions.create({
             messages: [
                 {
                     role: "system",
-                    content: "You are an AI that takes simple text and creates a detailed, verbose, and eloquent version of it. Expand on the user's ideas with rich vocabulary and detailed descriptions."
+                    content: "You are an AI that takes simple text and creates a detailed, verbose, and eloquent version of it. Expand on the user's ideas with rich vocabulary and detailed descriptions. IMPORTANT: Your response must not exceed 400 characters total, as each character will be converted to a 5-character Discord emote format. The final output has a hard limit of 2000 characters for Discord messages."
                 },
                 {
                     role: "user",
@@ -86,7 +86,16 @@ advancedBtn.addEventListener('click', async () => {
         inputText.value = verboseText;
         
         // Convert to emote format and update output
-        outputText.value = convertToEmoteFormat(verboseText);
+        const emoteText = convertToEmoteFormat(verboseText);
+        
+        // Check if the result exceeds Discord's character limit and truncate if needed
+        if (emoteText.length > 2000) {
+            const truncatedText = truncateEmoteText(emoteText, 2000);
+            outputText.value = truncatedText;
+            alert("The output has been truncated to fit Discord's 2000 character limit.");
+        } else {
+            outputText.value = emoteText;
+        }
         
     } catch (error) {
         console.error("Error calling AI:", error);
@@ -98,9 +107,33 @@ advancedBtn.addEventListener('click', async () => {
     }
 });
 
+// Function to truncate emote text to fit character limit
+function truncateEmoteText(emoteText, maxLength) {
+    if (emoteText.length <= maxLength) return emoteText;
+    
+    // Split by spaces to preserve whole emotes
+    const emotes = emoteText.split(' ');
+    let result = '';
+    
+    for (const emote of emotes) {
+        // Check if adding this emote would exceed the limit
+        if ((result + emote).length + 1 > maxLength) break;
+        result += (result ? ' ' : '') + emote;
+    }
+    
+    return result;
+}
+
 // Update output when input changes
 inputText.addEventListener('input', () => {
-    outputText.value = convertToEmoteFormat(inputText.value);
+    const emoteText = convertToEmoteFormat(inputText.value);
+    
+    // Check if the result exceeds Discord's character limit and truncate if needed
+    if (emoteText.length > 2000) {
+        outputText.value = truncateEmoteText(emoteText, 2000);
+    } else {
+        outputText.value = emoteText;
+    }
 });
 
 // Copy to clipboard functionality
