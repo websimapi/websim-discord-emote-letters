@@ -1,0 +1,30 @@
+body {
+    font-family: sans-serif;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+#emote-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+#emote-list li {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-family: monospace;
+    font-size: 1.1em;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
